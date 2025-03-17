@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Caption & Song Recommender</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    max-width: 90%; /* Adjust for smaller screens */
+    width: 400px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+img {
+    margin-top: 15px;
+    max-width: 90%; /* Ensures image fits in mobile screens */
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.result-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+    display: inline-block;
+    text-align: left;
+    max-width: 90%;
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 600px) {
+    form, .result-box {
+        width: 90%; /* Adjusts layout for small screens */
+        padding: 15px;
+    }
+
+    button {
+        width: 100%; /* Full-width button for better UX */
+    }
+}
+
+        </style>
+</head>
+<body>
+
+    <h2>Upload an Image and Get an Instagram Caption + Song 🎵</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <input type="file" name="image" id="imageInput" required><br><br>
+
+        <label>Select Caption Style:</label>
+        <select name="caption_style">
+            <option value="funny">Funny</option>
+            <option value="motivational">Motivational</option>
+            <option value="romantic">Romantic</option>
+            <option value="aesthetic">Aesthetic</option>
+        </select><br><br>
+
+        <button type="submit">Generate</button>
+    </form>
+
+    <!-- Image Preview -->
+    <div id="previewContainer" style="display: none;">
+        <h3>Preview:</h3>
+        <img id="imagePreview" src="" alt="Image Preview">
+    </div>
+
+    {% if image %}
+    <div class="result-box">
+        <h3>Uploaded Image:</h3>
+        <img src="{{ image }}" width="300"><br><br>
+
+        <h3>Generated Caption:</h3>
+        <p><strong>{{ caption }}</strong></p>
+
+        <h3>Recommended Song:</h3>
+        {% if song %}
+            <a href="{{ song }}" target="_blank">🎧 Listen on Spotify</a>
+        {% else %}
+            <p>No song found. Try another keyword!</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <script>
+        // Show Image Preview before Upload
+        document.getElementById("imageInput").addEventListener("change", function(event) {
+            const previewContainer = document.getElementById("previewContainer");
+            const previewImage = document.getElementById("imagePreview");
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+</html>
